@@ -1,9 +1,9 @@
 #include <iostream>
-#include "../include/array.h"
+#include "../include/vector.h"
 
 int main()
 {
-    Array<int> arr;
+    Vector<int> arr;
     arr.push_back(10);
     arr.push_back(20);
     arr.push_back(30);

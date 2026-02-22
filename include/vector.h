@@ -1,25 +1,26 @@
-#ifndef ARRAY_H
-#define ARRAY_H
+#ifndef VECTOR_H
+#define VECTOR_H
 #include <cstddef>
 #include <stdexcept>
+
 template<typename T>
-class Array
+class Vector
 {
     T* _array;
     size_t _size;
     public:
 ////////////////////////////////////// deafult
-    Array() : _array(nullptr), _size(0)
+    Vector() : _array(nullptr), _size(0)
     {
 
     }
 ////////////////////////////////////// param
-    Array( size_t size) : _size(size)
+    Vector( size_t size) : _size(size)
     {
         _array = new T[_size];
     }
 ////////////////////////////////////// copy 
-    Array(const Array& copy)
+    Vector(const Vector& copy)
     {
         if(copy._size > 0)
         {
@@ -37,7 +38,7 @@ class Array
         }
     }
 ////////////////////////////////////// move constr
-    Array(Array&& move) noexcept
+    Vector(Vector&& move) noexcept
     {
         _size = move._size;
         _array = move._array;
@@ -45,7 +46,7 @@ class Array
         move._size = 0;
     }
 ////////////////////////////////////// move oper
-    Array& operator=(Array&& move) noexcept
+    Vector& operator=(Vector&& move) noexcept
     {
         if(this != &move)
         {
@@ -62,7 +63,7 @@ class Array
         }
     }
 ////////////////////////////////////// copy oper
-    Array& operator=(const Array& copy)
+    Vector& operator=(const Vector& copy)
     {
         if(this == &copy) return *this;
         delete[] _array;
@@ -92,7 +93,7 @@ class Array
     {
         if(index >= _size)
         {
-            throw std::out_of_range("Array::at");
+            throw std::out_of_range("Vector::at");
         }
         return _array[index];
     }
@@ -144,7 +145,7 @@ class Array
         _size = 0;
     }
 ////////////////////////////////////// destr
-    ~Array()
+    ~Vector()
     {
         delete[] _array;
     }
