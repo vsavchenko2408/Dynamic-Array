@@ -8,24 +8,30 @@ class Vector
 {
     T* _array;
     size_t _size;
+    size_t _capacity;
     public:
 ////////////////////////////////////// deafult
-    Vector() : _array(nullptr), _size(0)
+    Vector() : _array(nullptr), _size(0) , _capacity(0)
     {
 
     }
 ////////////////////////////////////// param
-    Vector( size_t size) : _size(size)
+    Vector( size_t size) : _size(size) , _capacity(size*2)
     {
-        _array = new T[_size];
+        _array = new T[_capacity];
     }
 ////////////////////////////////////// copy 
     Vector(const Vector& copy)
     {
+        if(_capacity < copy._capacity)
+        {
+            _capacity = copy._capacity;
+        }
+
         if(copy._size > 0)
         {
             _size = copy._size;
-            _array = new T[_size];
+            _array = new T[_capacity];
             for(size_t i = 0; i < _size; ++i)
             {
                 _array[i] = copy._array[i];
@@ -40,6 +46,7 @@ class Vector
 ////////////////////////////////////// move constr
     Vector(Vector&& move) noexcept
     {
+        _capacity = move._capacity;
         _size = move._size;
         _array = move._array;
         move._array = nullptr;
@@ -51,6 +58,7 @@ class Vector
         if(this != &move)
         {
             delete[] _array;
+            _capacity = move._capacity;
             _size = move._size;
             _array = move._array;
             move._array = nullptr;
@@ -100,6 +108,7 @@ class Vector
 ////////////////////////////////////// push_back()
     void push_back(const T& obj)
     {
+
         T* temp = new T[_size+1];
         for(size_t i = 0; i < _size; ++i)
         {
@@ -109,6 +118,7 @@ class Vector
         delete[] _array;
         _array = temp;
         ++_size;
+
     }
 ////////////////////////////////////// size()
     size_t size()const
