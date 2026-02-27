@@ -50,6 +50,7 @@ class Vector
         _size = move._size;
         _array = move._array;
         move._array = nullptr;
+        move._capacity = 0;
         move._size = 0;
     }
 ////////////////////////////////////// move oper
@@ -62,6 +63,7 @@ class Vector
             _size = move._size;
             _array = move._array;
             move._array = nullptr;
+            move._capacity = 0;
             move._size = 0;
             return *this;
         }
@@ -77,8 +79,9 @@ class Vector
         delete[] _array;
         if(copy._size > 0)
         {
+            this->_capacity = copy._capacity;
             this->_size = copy._size;
-            this->_array = new T[_size];
+            this->_array = new T[_capacity];
             for(size_t i = 0; i < _size; ++i)
             {
                 this->_array[i] = copy._array[i];
@@ -86,6 +89,7 @@ class Vector
         }
         else
         {
+            this->_capacity = 0;
             this->_size = 0;
             this->_array = nullptr;
         }
@@ -108,17 +112,22 @@ class Vector
 ////////////////////////////////////// push_back()
     void push_back(const T& obj)
     {
-
-        T* temp = new T[_size+1];
-        for(size_t i = 0; i < _size; ++i)
+        if(_capacity > _size)
         {
-            temp[i] = _array[i];
+            T* temp = new T[_size+1];
+            for(size_t i = 0; i < _size; ++i)
+            {
+                temp[i] = _array[i];
+            }
+            temp[_size] = obj;
+            delete[] _array;
+            _array = temp;
+            ++_size;
         }
-        temp[_size] = obj;
-        delete[] _array;
-        _array = temp;
-        ++_size;
-
+        else
+        {
+            
+        }
     }
 ////////////////////////////////////// size()
     size_t size()const
