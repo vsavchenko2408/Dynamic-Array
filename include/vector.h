@@ -151,6 +151,17 @@ void reserve(size_t new_capacity)
     {
         return _array[0];
     }
+//////////////////////////////////////begin()
+int* begin() 
+{
+    return _array;
+}
+//////////////////////////////////////end()
+int* end() 
+{
+    return _array + _size;
+}
+
 ////////////////////////////////////// back()
     T& back()
     {
