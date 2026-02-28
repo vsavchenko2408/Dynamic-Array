@@ -20,28 +20,18 @@ class Vector
     {
         _array = new T[_capacity];
     }
-////////////////////////////////////// copy 
-    Vector(const Vector& copy)
+////////////////////////////////////// copy constr
+    Vector(const Vector& copy) : _array(nullptr), _size(copy._size), _capacity(copy._capacity)
     {
-        if(_capacity < copy._capacity)
-        {
-            _capacity = copy._capacity;
-        }
-
         if(copy._size > 0)
         {
-            _size = copy._size;
             _array = new T[_capacity];
             for(size_t i = 0; i < _size; ++i)
             {
                 _array[i] = copy._array[i];
             }
         }
-        else
-        {
-            _size = 0;
-            _array = nullptr;
-        }
+
     }
 ////////////////////////////////////// move constr
     Vector(Vector&& move) noexcept
@@ -73,35 +63,43 @@ class Vector
         }
     }
 ////////////////////////////////////// copy oper
-    Vector& operator=(const Vector& copy)
-    {
-        if(this == &copy) return *this;
-        delete[] _array;
-        if(copy._size > 0)
-        {
-            this->_capacity = copy._capacity;
-            this->_size = copy._size;
-            this->_array = new T[_capacity];
-            for(size_t i = 0; i < _size; ++i)
-            {
-                this->_array[i] = copy._array[i];
-            }
-        }
-        else
-        {
-            this->_capacity = 0;
-            this->_size = 0;
-            this->_array = nullptr;
-        }
-        return *this;
-    }
-////////////////////////////////////// oper[]
+Vector& operator=(const Vector& copy) 
+{
+     if(_array != copy._array) 
+     {
+        _capacity = copy._capacity;
+        _size = copy._size; 
+        delete[] _array; 
+        _array = new T[_capacity];
+        for(size_t i = 0; i < _size; ++i) 
+        { 
+            _array[i] = copy._array[i];
+        } 
+        return *this; 
+        } 
+        return *this; 
+}
+////////////////////////////////////// const oper[]
     const T& operator[](size_t index) const
     {
         return _array[index];
     }
+//////////////////////////////////////  oper[]
+     T& operator[](size_t index) 
+    {
+        return _array[index];
+    }
 ////////////////////////////////////// at()
-    T& at(size_t index) const
+    T& at(size_t index) 
+    {
+        if(index >= _size)
+        {
+            throw std::out_of_range("Vector::at");
+        }
+        return _array[index];
+    }
+////////////////////////////////////// const at()
+    const T& at(size_t index) const
     {
         if(index >= _size)
         {
@@ -110,25 +108,39 @@ class Vector
         return _array[index];
     }
 ////////////////////////////////////// push_back()
-    void push_back(const T& obj)
+void push_back(const T& obj)
+{
+    if (_size == _capacity)
     {
-        if(_capacity > _size)
-        {
-            T* temp = new T[_size+1];
-            for(size_t i = 0; i < _size; ++i)
-            {
-                temp[i] = _array[i];
-            }
-            temp[_size] = obj;
-            delete[] _array;
-            _array = temp;
-            ++_size;
-        }
-        else
-        {
-            
-        }
+        size_t new_capacity = (_capacity == 0) ? 1 : _capacity * 2;
+
+        T* temp = new T[new_capacity];
+        for (size_t i = 0; i < _size; ++i)
+            temp[i] = _array[i];
+
+        delete[] _array;
+        _array = temp;
+        _capacity = new_capacity;
     }
+
+    _array[_size] = obj;
+    ++_size;
+}
+//////////////////////////////////////reserve()
+void reserve(size_t new_capacity)
+ {
+     if(new_capacity > _capacity)
+      {
+        _capacity = new_capacity;
+        T* temp = new T[_capacity];
+        for(size_t i = 0; i < _size;++i) 
+        {
+            temp[i] = _array[i]; 
+        }
+        delete[] _array; 
+        _array = temp; 
+} 
+}
 ////////////////////////////////////// size()
     size_t size()const
     {
@@ -162,6 +174,7 @@ class Vector
         delete[] _array;
         _array = nullptr;
         _size = 0;
+        _capacity = 0;
     }
 ////////////////////////////////////// destr
     ~Vector()
