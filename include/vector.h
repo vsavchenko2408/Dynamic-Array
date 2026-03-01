@@ -65,7 +65,7 @@ class Vector
 ////////////////////////////////////// copy oper
 Vector& operator=(const Vector& copy) 
 {
-     if(_array != copy._array) 
+     if(this != &copy) 
      {
         _capacity = copy._capacity;
         _size = copy._size; 
@@ -77,7 +77,7 @@ Vector& operator=(const Vector& copy)
         } 
         return *this; 
         } 
-        return *this; 
+    return *this; 
 }
 ////////////////////////////////////// const oper[]
     const T& operator[](size_t index) const
@@ -152,12 +152,12 @@ void reserve(size_t new_capacity)
         return _array[0];
     }
 //////////////////////////////////////begin()
-int* begin() 
+T* begin() 
 {
     return _array;
 }
 //////////////////////////////////////end()
-int* end() 
+T* end() 
 {
     return _array + _size;
 }
